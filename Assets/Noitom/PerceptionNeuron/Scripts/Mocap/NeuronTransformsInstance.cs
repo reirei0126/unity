@@ -227,7 +227,12 @@ namespace Neuron
                         orignalBoneRot = orignalRot[i];
                     }
                     Vector3 rot = actor.GetReceivedRotation((NeuronBones)i);
-                    Quaternion srcQ = Quaternion.Euler(rot);
+                    if (i==14)
+                    {
+						Debug.Log(rot.z);
+					}
+					//Debug.Log(rot.x+","+rot.y+"," + rot.z);
+					Quaternion srcQ = Quaternion.Euler(rot);
 
                     //// Test
                     //rot = tempSource.transforms[i].localRotation.eulerAngles;
