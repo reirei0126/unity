@@ -25,8 +25,11 @@ namespace Neuron
 {
 	public class NeuronTransformsInstance : NeuronInstance
 	{
-        //public NeuronTransformsInstance temp;
-        //public static NeuronTransformsInstance tempSource;
+		//public NeuronTransformsInstance temp;
+		//public static NeuronTransformsInstance tempSource;
+
+		//public Vector3[] rot;
+
         public bool useNewRig = true;
         public bool enableHipMove = true;
 		public Transform					root = null;
@@ -227,10 +230,7 @@ namespace Neuron
                         orignalBoneRot = orignalRot[i];
                     }
                     Vector3 rot = actor.GetReceivedRotation((NeuronBones)i);
-                    if (i==14)
-                    {
-						Debug.Log(rot.z);
-					}
+
 					//Debug.Log(rot.x+","+rot.y+"," + rot.z);
 					Quaternion srcQ = Quaternion.Euler(rot);
 
@@ -266,6 +266,7 @@ namespace Neuron
 							case UpdateMethod.Physical:
 								rigidbody.MovePosition( src_transform.position );
 								rigidbody.MoveRotation( src_transform.rotation );
+									//Debug.Log(src_transform.rotation);
 								break;
 
 							case UpdateMethod.EstimatedPhysical:

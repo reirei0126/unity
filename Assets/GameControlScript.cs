@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+//public NeuronTransformsInstance NI;
+
 public class GameControlScript : MonoBehaviour
 {
     // UI TextéwíËóp
-    public Text TextFrame;
+    public Text judgeText;
     // ï\é¶Ç∑ÇÈïœêî
     private int frame;
 
@@ -39,7 +41,7 @@ public class GameControlScript : MonoBehaviour
             {
                 popup = "Nice!!!!";
             }
-            TextFrame.text = string.Format("{0:00000}{1}", frame,popup);
+            judgeText.text = string.Format("{0:00000}{1}", frame,popup);
             frame++;
         }
 
