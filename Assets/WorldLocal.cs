@@ -11,7 +11,12 @@ public class WorldLocal : MonoBehaviour
 {
     int head = 0;
     int last;
-    public Text judgeText;
+    public Text Hipsjudge;
+    public Text Spine2judge;
+    public Text RightArmjudge;
+    public Text RightForeArmjudge;
+    public Text LeftArmjudge;
+    public Text LeftForeArmjudge;
 
     public Transform Hips;
 	public Transform Spine2;
@@ -20,15 +25,26 @@ public class WorldLocal : MonoBehaviour
 	public Transform LeftArm;
 	public Transform LeftForeArm;
     Transform[] Bones;
+    Text[] Texts;
     public Vector3[][] Store;
 
 	// Use this for initialization
 	void Start()
 	{
 		StartCoroutine("store");
-		StartCoroutine("cut");
+
+        StartCoroutine("cut");
+        /*
+        StartCoroutine("Hips");
+        StartCoroutine("Spine2");
+        StartCoroutine("RightArm");
+        StartCoroutine("RightForeArm");
+        StartCoroutine("LeftArm");
+        StartCoroutine("LeftForeArm");
+        */
         StartCoroutine("file");
         Bones = new Transform[6]{ Hips,Spine2,RightArm,RightForeArm,LeftArm,LeftForeArm};
+        Texts = new Text[6] { Hipsjudge, Spine2judge, RightArmjudge, RightForeArmjudge, LeftArmjudge, LeftForeArmjudge };
         Store = new Vector3[6][];
 
         //Debug.Log(":" + Store[0][0].GetType());
@@ -91,7 +107,54 @@ public class WorldLocal : MonoBehaviour
         }
 
     }
+    /*
+    IEnumerator Hips()
+    {
 
+        Debug.Log("Hipscut");
+        yield return new WaitForSeconds(13.8f);  //14.9秒待つ
+
+        for (; ; ) // 無限ループ。一定の条件で抜けたい場合は代わりにwhileを使う
+        {
+            yield return new WaitForSeconds(1.1111f);
+            int judge = 0;
+            int maxstop = 0;
+            last = Store[0].Length - 1;
+            Debug.Log(last);
+            Vector3[][] Routine = new Vector3[Bones.Length][];
+            //Vector3[][] Routine = new Vector3[Bones.Length][last - head];
+
+            int j = 0;
+            Debug.Log(j);
+            Routine[i] = new Vector3[last - head];
+            Array.Copy(Store[i], head, Routine[i], 0, last - head);
+            
+
+            for (int i = 1; i < Routine[2].Length; i++)
+            {
+                float disp = (float)Math.Sqrt(Math.Pow((Routine[2][i].x - Routine[2][i - 1].x), 2)
+                                             + Math.Pow((Routine[2][i].y - Routine[2][i - 1].y), 2)
+                                             + Math.Pow((Routine[2][i].z - Routine[2][i - 1].z), 2));
+                if (disp < 0.3)
+                {
+                    judge += 1;
+                }
+                else
+                {
+                    if (judge > maxstop)
+                    {
+                        maxstop = judge - 1;
+                    }
+                    judge = 0;
+                }
+            }
+
+            RightArmjudge.text = string.Format("{0}frame/{1}", maxstop, last - head);
+            head = last + 1;
+        }
+
+    }*/
+    
     IEnumerator cut()
     {
 
@@ -102,8 +165,8 @@ public class WorldLocal : MonoBehaviour
         for (; ; ) // 無限ループ。一定の条件で抜けたい場合は代わりにwhileを使う
         {
             yield return new WaitForSeconds(1.1111f);
-            int judge = 0;
-            int maxstop = 0;
+            //int judge = 0;
+            //int maxstop = 0;
             last = Store[0].Length - 1;
             Debug.Log(last);
             Vector3[][] Routine = new Vector3[Bones.Length][];
@@ -115,30 +178,36 @@ public class WorldLocal : MonoBehaviour
                 Array.Copy(Store[i], head, Routine[i], 0, last - head);
             }
 
-            for (int i = 1; i < Routine[2].Length; i++)
+            for (int j = 0; j < Bones.Length; j++)
             {
-                float disp = (float)Math.Sqrt( Math.Pow((Routine[2][i].x - Routine[2][i - 1].x), 2)
-                                             + Math.Pow((Routine[2][i].y - Routine[2][i - 1].y), 2)
-                                             + Math.Pow((Routine[2][i].z - Routine[2][i - 1].z), 2));
-                if (disp<0.3)
+                int judge = 0;
+                int maxstop = 0;
+                for (int i = 1; i < Routine[j].Length; i++)
                 {
-                    judge += 1;
-                }
-                else
-                {
-                    if (judge > maxstop)
+                    float disp = (float)Math.Sqrt(Math.Pow((Routine[j][i].x - Routine[j][i - 1].x), 2)
+                                                 + Math.Pow((Routine[j][i].y - Routine[j][i - 1].y), 2)
+                                                 + Math.Pow((Routine[j][i].z - Routine[j][i - 1].z), 2));
+                    if (disp < 0.3)
                     {
-                        maxstop = judge-1;
+                        judge += 1;
                     }
-                    judge = 0;
+                    else
+                    {
+                        if (judge > maxstop)
+                        {
+                            maxstop = judge - 1;
+                        }
+                        judge = 0;
+                    }
                 }
-            }
 
-            judgeText.text = string.Format("{0}frame/{1}", maxstop,last-head);
+                Texts[j].text = string.Format("{0}:{1}frame/{2}", Bones[j].name,maxstop, last - head);
+            }
             head = last + 1;
         }
 
     }
+    
 
     IEnumerator file()
     {
