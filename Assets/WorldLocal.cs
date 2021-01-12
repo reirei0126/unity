@@ -1,4 +1,4 @@
-using System;
+Ôªøusing System;
 using System.IO;
 using System.Collections;
 using System.Collections.Generic;
@@ -11,6 +11,8 @@ public class WorldLocal : MonoBehaviour
 {
     int head = 0;
     int last;
+
+    public Text Judge;
     public Text Hipsjudge;
     public Text Spine2judge;
     public Text RightArmjudge;
@@ -24,12 +26,16 @@ public class WorldLocal : MonoBehaviour
 	public Transform RightForeArm;
 	public Transform LeftArm;
 	public Transform LeftForeArm;
+
     Transform[] Bones;
     Text[] Texts;
+    string[] BoneNames;
     public Vector3[][] Store;
+    int count = 0;
+    double Stoptime = 0;
 
-	// Use this for initialization
-	void Start()
+    // Use this for initialization
+    void Start()
 	{
 		StartCoroutine("store");
 
@@ -46,7 +52,9 @@ public class WorldLocal : MonoBehaviour
         Bones = new Transform[6]{ Hips,Spine2,RightArm,RightForeArm,LeftArm,LeftForeArm};
         Texts = new Text[6] { Hipsjudge, Spine2judge, RightArmjudge, RightForeArmjudge, LeftArmjudge, LeftForeArmjudge };
         Store = new Vector3[6][];
-
+        BoneNames = new string[6] { "ËÖ∞", "‰∏äÂçäË∫´", "Âè≥ËÖï", "Âè≥ÂâçËÖï", "Â∑¶ËÖï", "Â∑¶ÂâçËÖï" };
+        //double y = 1.11111111;
+        //Judge.text = string.Format("{0:f4}\r\n{01:f4}", y, y);
         //Debug.Log(":" + Store[0][0].GetType());
         //Debug.Log(Store.GetType() + ":" + Store[0].GetType());
         for (int i=0; i < Bones.Length; i++)
@@ -55,11 +63,11 @@ public class WorldLocal : MonoBehaviour
         }
         /*
          * Debug.Log(RightArm.position.GetType() + ":" + Bones[4].position.GetType());
-		//Å@ÉèÅ[ÉãÉhãÛä‘Ç≈ÇÃÉfÅ[É^
+		//„ÄÄ„ÉØ„Éº„É´„ÉâÁ©∫Èñì„Åß„ÅÆ„Éá„Éº„Çø
 		Debug.Log("ParentWorld:" + parent.position + "|" + parent.eulerAngles + "|" + parent.lossyScale);
 		Debug.Log("ChildWorld:" + child.position + "|" + child.eulerAngles + "|" + child.lossyScale);
 
-		//Å@ÉçÅ[ÉJÉããÛä‘Ç≈ÇÃÉfÅ[É^
+		//„ÄÄ„É≠„Éº„Ç´„É´Á©∫Èñì„Åß„ÅÆ„Éá„Éº„Çø
 		Debug.Log("ParentLocal:" + parent.localPosition + "|" + parent.localEulerAngles + "|" + parent.localScale);
 		Debug.Log("ChildLocal:" + child.localPosition + "|" + child.localEulerAngles + "|" + child.localScale);
 		*/
@@ -75,12 +83,12 @@ public class WorldLocal : MonoBehaviour
     {
 
         Debug.Log("store");
-        yield return new WaitForSeconds(13.8f);  //14.9ïbë“Ç¬
-        //Debug.Log("14.9ïbåoÇøÇ‹ÇµÇΩ");
+        yield return new WaitForSeconds(14.9f);  //14.9ÁßíÂæÖ„Å§
+        //Debug.Log("14.9ÁßíÁµå„Å°„Åæ„Åó„Åü");
         bool flag = false;
-        for (; ; ) // ñ≥å¿ÉãÅ[ÉvÅBàÍíËÇÃèåèÇ≈î≤ÇØÇΩÇ¢èÍçáÇÕë„ÇÌÇËÇ…whileÇégÇ§
+        for (; ; ) // ÁÑ°Èôê„É´„Éº„Éó„ÄÇ‰∏ÄÂÆö„ÅÆÊù°‰ª∂„ÅßÊäú„Åë„Åü„ÅÑÂ†¥Âêà„ÅØ‰ª£„Çè„Çä„Å´while„Çí‰Ωø„ÅÜ
         {
-            yield return new WaitForSeconds(0.0111f);
+            yield return new WaitForSeconds(0.011f);
      
             for (int i = 0; i < Bones.Length; i++)
             {
@@ -107,14 +115,202 @@ public class WorldLocal : MonoBehaviour
         }
 
     }
-    /*
+    
+    IEnumerator cut()
+    {
+
+        Debug.Log("cut");
+        yield return new WaitForSeconds(14.9f);  //14.9ÁßíÂæÖ„Å§
+        //Debug.Log("14.9ÁßíÁµå„Å°„Åæ„Åó„Åü");
+
+        //for (; ; ) // ÁÑ°Èôê„É´„Éº„Éó„ÄÇ‰∏ÄÂÆö„ÅÆÊù°‰ª∂„ÅßÊäú„Åë„Åü„ÅÑÂ†¥Âêà„ÅØ‰ª£„Çè„Çä„Å´while„Çí‰Ωø„ÅÜ
+        while(Time.time<64.0f)
+        {
+            
+            yield return new WaitForSeconds(1.111f);
+            System.Diagnostics.Stopwatch sw = new System.Diagnostics.Stopwatch();
+            sw.Start();
+            float starttime = Time.time;
+            last = Store[0].Length - 1;
+            //Debug.Log(last);
+            Vector3[][] Routine = new Vector3[Bones.Length][];
+            float ave = 0;
+            
+            //Vector3[][] Routine = new Vector3[Bones.Length][last - head];
+            for (int i = 0; i < Bones.Length; i++)
+            {
+                //Debug.Log(i);
+                Routine[i] = new Vector3[last - head];
+                Array.Copy(Store[i], head, Routine[i], 0, last - head);
+            }
+
+            for (int j = 0; j < Bones.Length; j++)
+            {
+                int judge = 0;
+                int maxstop = 0;
+                for (int i = 1; i < Routine[j].Length; i++)
+                {
+                    float disp = (float)Math.Sqrt(Math.Pow((Routine[j][i].x - Routine[j][i - 1].x), 2)
+                                                 + Math.Pow((Routine[j][i].y - Routine[j][i - 1].y), 2)
+                                                 + Math.Pow((Routine[j][i].z - Routine[j][i - 1].z), 2));
+                    if (disp < 0.3)
+                    {
+                        judge += 1;
+                    }
+                    else
+                    {
+                        if (judge > maxstop)
+                        {
+                            maxstop = judge - 1;
+                        }
+                        judge = 0;
+                    }
+                }
+                ave += maxstop;
+                
+                if (maxstop > 18)
+                {
+                    Texts[j].text = string.Format("{0}:‚óé", BoneNames[j]);
+                    Texts[j].color = new Color(0.88f, 0.66f, 0.0f, 1.0f);
+                }
+                else if (maxstop > 13)
+                {
+                    Texts[j].text = string.Format("{0}:‚óè", BoneNames[j]);
+                    Texts[j].color = new Color(0.0f, 0.0f, 1.0f, 1.0f);
+                }
+                else if (maxstop > 8)
+                {
+                    Texts[j].text = string.Format("{0}:‚ñ≤", BoneNames[j]);
+                    Texts[j].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+                }
+                else
+                {
+                    Texts[j].text = string.Format("{0}:‚úñ", BoneNames[j]);
+                    Texts[j].color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+                }
+                
+                //Texts[j].text = string.Format("{0}:{1}frame/{2}", Bones[j].name,maxstop, last - head);
+            }
+            ave = ave / (float)Bones.Length;
+            
+            if (ave > 18)
+            {
+                Judge.text = string.Format("Perfect!!{0}",count);
+                Judge.color = new Color(0.88f, 0.66f, 0.0f, 1.0f);
+            }
+            else if(ave > 13)
+            {
+                Judge.text = string.Format("Greatt!!{0}", count);
+                Judge.color = new Color(0.0f, 0.0f, 1.0f, 1.0f);
+            }
+            else if (ave > 8)
+            {
+                Judge.text = string.Format("Nice!!{0}", count);
+                Judge.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
+            }
+            else
+            {
+                Judge.text = string.Format("„ÇÇ„Å£„Å®Èï∑„Åè!!", count);
+                Judge.color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
+            }
+            
+            //Judge.text = string.Format("{0}frame stop", ave);
+            head = last + 1;
+            count += 1;
+            Stoptime += ave;
+            sw.Stop();
+            Debug.Log(sw.ElapsedMilliseconds + "ms");
+        }
+
+    }
+    
+
+    IEnumerator file()
+    {
+
+        Debug.Log("file");
+        yield return new WaitForSeconds(66.0f);
+        double x =(Stoptime * 0.011) / (double)count;
+        Debug.Log(x.GetType());
+        Judge.color = new Color(1.0f, 1.0f, 1.0f, 1.0f);
+        Judge.text = string.Format("Âπ≥Âùá„Çπ„Éà„ÉÉ„ÉóÊôÇÈñì\r\n{0:f4}s", x);
+
+        /*
+        Debug.Log("fileWrite");
+        int j = 0;
+        using (StreamWriter sw = new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\HipsDisp.txt", false, Encoding.UTF8))
+        {
+            for (int i = 1; i < Store[j].Length; i++)
+            {
+                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
+                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
+                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
+            }
+            j += 1;
+        }
+        using (StreamWriter sw = new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\Spine2Disp.txt", false, Encoding.UTF8))
+        {
+            for (int i = 1; i < Store[j].Length; i++)
+            {
+                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
+                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
+                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
+            }
+            j += 1;
+        }
+        using (StreamWriter sw= new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\RightArmDisp.txt", false, Encoding.UTF8))
+        {
+
+            for (int i = 1; i < Store[j].Length; i++)
+            {
+                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
+                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
+                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
+            }
+            j += 1;
+        }
+        using (StreamWriter sw = new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\RightForeArmDisp.txt", false, Encoding.UTF8))
+        {
+            for (int i = 1; i < Store[j].Length; i++)
+            {
+                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
+                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
+                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
+            }
+            j += 1;
+        }
+        using (StreamWriter sw = new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\LefhtArmDisp.txt", false, Encoding.UTF8))
+        {
+
+            for (int i = 1; i < Store[j].Length; i++)
+            {
+                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
+                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
+                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
+            }
+            j += 1;
+        }
+        using (StreamWriter sw = new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\LeftForeArmDisp.txt", false, Encoding.UTF8))
+        {
+            for (int i = 1; i < Store[j].Length; i++)
+            {
+                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
+                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
+                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
+            }
+            j += 1;
+        }
+        */
+    }
+}
+/*
     IEnumerator Hips()
     {
 
         Debug.Log("Hipscut");
-        yield return new WaitForSeconds(13.8f);  //14.9ïbë“Ç¬
+        yield return new WaitForSeconds(13.8f);  //14.9ÁßíÂæÖ„Å§
 
-        for (; ; ) // ñ≥å¿ÉãÅ[ÉvÅBàÍíËÇÃèåèÇ≈î≤ÇØÇΩÇ¢èÍçáÇÕë„ÇÌÇËÇ…whileÇégÇ§
+        for (; ; ) // ÁÑ°Èôê„É´„Éº„Éó„ÄÇ‰∏ÄÂÆö„ÅÆÊù°‰ª∂„ÅßÊäú„Åë„Åü„ÅÑÂ†¥Âêà„ÅØ‰ª£„Çè„Çä„Å´while„Çí‰Ωø„ÅÜ
         {
             yield return new WaitForSeconds(1.1111f);
             int judge = 0;
@@ -154,139 +350,3 @@ public class WorldLocal : MonoBehaviour
         }
 
     }*/
-    
-    IEnumerator cut()
-    {
-
-        Debug.Log("cut");
-        yield return new WaitForSeconds(13.8f);  //14.9ïbë“Ç¬
-        //Debug.Log("14.9ïbåoÇøÇ‹ÇµÇΩ");
-
-        for (; ; ) // ñ≥å¿ÉãÅ[ÉvÅBàÍíËÇÃèåèÇ≈î≤ÇØÇΩÇ¢èÍçáÇÕë„ÇÌÇËÇ…whileÇégÇ§
-        {
-            yield return new WaitForSeconds(1.1111f);
-            //int judge = 0;
-            //int maxstop = 0;
-            last = Store[0].Length - 1;
-            Debug.Log(last);
-            Vector3[][] Routine = new Vector3[Bones.Length][];
-            //Vector3[][] Routine = new Vector3[Bones.Length][last - head];
-            for (int i = 0; i < Bones.Length; i++)
-            {
-                Debug.Log(i);
-                Routine[i] = new Vector3[last - head];
-                Array.Copy(Store[i], head, Routine[i], 0, last - head);
-            }
-
-            for (int j = 0; j < Bones.Length; j++)
-            {
-                int judge = 0;
-                int maxstop = 0;
-                for (int i = 1; i < Routine[j].Length; i++)
-                {
-                    float disp = (float)Math.Sqrt(Math.Pow((Routine[j][i].x - Routine[j][i - 1].x), 2)
-                                                 + Math.Pow((Routine[j][i].y - Routine[j][i - 1].y), 2)
-                                                 + Math.Pow((Routine[j][i].z - Routine[j][i - 1].z), 2));
-                    if (disp < 0.3)
-                    {
-                        judge += 1;
-                    }
-                    else
-                    {
-                        if (judge > maxstop)
-                        {
-                            maxstop = judge - 1;
-                        }
-                        judge = 0;
-                    }
-                }
-
-                Texts[j].text = string.Format("{0}:{1}frame/{2}", Bones[j].name,maxstop, last - head);
-            }
-            head = last + 1;
-        }
-
-    }
-    
-
-    IEnumerator file()
-    {
-
-        Debug.Log("file");
-        yield return new WaitForSeconds(64.0f);
-        Debug.Log("fileWrite");
-        int j = 0;
-        using (StreamWriter sw = new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\HipsDisp.txt", false, Encoding.UTF8))
-        {
-            for (int i = 1; i < Store[j].Length; i++)
-            {
-                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
-                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
-                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
-            }
-            j += 1;
-        }
-        using (StreamWriter sw = new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\Spine2Disp.txt", false, Encoding.UTF8))
-        {
-            for (int i = 1; i < Store[j].Length; i++)
-            {
-                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
-                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
-                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
-            }
-            j += 1;
-        }
-        using (StreamWriter sw= new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\RightArmDisp.txt", false, Encoding.UTF8))
-        {
-
-            for (int i = 1; i < Store[j].Length; i++)
-            {
-                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
-                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
-                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
-            }
-            /*
-            for (int j = 0; j < Bones.Length; j++)
-            {
-                for (int i = 1; i < Store.Length; i++)
-                {
-                    sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
-                                                + Math.Pow((Store[j][i].y- Store[j][i - 1].y),2)
-                                                + Math.Pow((Store[j][i].z- Store[j][i - 1].z),2)));
-                }
-            }
-            */
-        }
-        using (StreamWriter sw = new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\RightForeArmDisp.txt", false, Encoding.UTF8))
-        {
-            for (int i = 1; i < Store[j].Length; i++)
-            {
-                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
-                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
-                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
-            }
-            j += 1;
-        }
-        using (StreamWriter sw = new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\LefhtArmDisp.txt", false, Encoding.UTF8))
-        {
-
-            for (int i = 1; i < Store[j].Length; i++)
-            {
-                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
-                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
-                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
-            }
-            j += 1;
-        }
-        using (StreamWriter sw = new StreamWriter(@"C:\Users\Manabe_Lab\Documents\data\LeftForeArmDisp.txt", false, Encoding.UTF8))
-        {
-            for (int i = 1; i < Store[j].Length; i++)
-            {
-                sw.WriteLine((float)Math.Sqrt(Math.Pow((Store[j][i].x - Store[j][i - 1].x), 2)
-                                            + Math.Pow((Store[j][i].y - Store[j][i - 1].y), 2)
-                                            + Math.Pow((Store[j][i].z - Store[j][i - 1].z), 2)));
-            }
-            j += 1;
-        }
-    }
-}
