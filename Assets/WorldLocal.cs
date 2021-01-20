@@ -168,17 +168,19 @@ public class WorldLocal : MonoBehaviour
                 }
                 ave += maxstop;
                 
-                if (maxstop > 18)
+                //default(上中級者)18/13/8
+                //未経験者8//6/4
+                if (maxstop > 8)
                 {
                     Texts[j].text = string.Format("{0}:◎", BoneNames[j]);
                     Texts[j].color = new Color(0.88f, 0.66f, 0.0f, 1.0f);
                 }
-                else if (maxstop > 13)
+                else if (maxstop > 6)
                 {
                     Texts[j].text = string.Format("{0}:●", BoneNames[j]);
                     Texts[j].color = new Color(0.0f, 0.0f, 1.0f, 1.0f);
                 }
-                else if (maxstop > 8)
+                else if (maxstop > 4)
                 {
                     Texts[j].text = string.Format("{0}:▲", BoneNames[j]);
                     Texts[j].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -188,22 +190,23 @@ public class WorldLocal : MonoBehaviour
                     Texts[j].text = string.Format("{0}:✖", BoneNames[j]);
                     Texts[j].color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
                 }
+               
                 
                 //Texts[j].text = string.Format("{0}:{1}frame/{2}", Bones[j].name,maxstop, last - head);
             }
             ave = ave / (float)Bones.Length;
             
-            if (ave > 18)
+            if (ave > 8)
             {
                 Judge.text = string.Format("Perfect!!{0}",count);
                 Judge.color = new Color(0.88f, 0.66f, 0.0f, 1.0f);
             }
-            else if(ave > 13)
+            else if(ave > 6)
             {
                 Judge.text = string.Format("Greatt!!{0}", count);
                 Judge.color = new Color(0.0f, 0.0f, 1.0f, 1.0f);
             }
-            else if (ave > 8)
+            else if (ave > 4)
             {
                 Judge.text = string.Format("Nice!!{0}", count);
                 Judge.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -213,8 +216,7 @@ public class WorldLocal : MonoBehaviour
                 Judge.text = string.Format("もっと長く!!", count);
                 Judge.color = new Color(1.0f, 0.0f, 0.0f, 1.0f);
             }
-            
-            //Judge.text = string.Format("{0}frame stop", ave);
+                      //Judge.text = string.Format("{0}frame stop", ave);
             head = last + 1;
             count += 1;
             Stoptime += ave;
