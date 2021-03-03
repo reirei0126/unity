@@ -30,6 +30,8 @@ namespace Neuron
 
 		//public Vector3[] rot;
 
+		//public GameObject director;
+
         public bool useNewRig = true;
         public bool enableHipMove = true;
 		public Transform					root = null;
@@ -55,34 +57,55 @@ namespace Neuron
 
 		public NeuronTransformsInstance()
 		{
+			Debug.Log("0");
 		}
 		
 		public NeuronTransformsInstance( string address, int port, int commandServerPort, NeuronConnection.SocketType socketType, int actorID )
 			:base( address, port, commandServerPort, socketType, actorID )
 		{
+			Debug.Log("000");
 		}
 		
 		public NeuronTransformsInstance( Transform root, string prefix, string address, int port, int commandServerPort, NeuronConnection.SocketType socketType, int actorID )
 			:base( address, port, commandServerPort, socketType, actorID )
 		{
+			Debug.Log("001");
 			Bind( root, prefix );
 		}
 		
 		public NeuronTransformsInstance( Transform root, string prefix, NeuronActor actor )
 			:base( actor )
 		{
+			Debug.Log("002");
 			Bind( root, prefix );
 		}
 		
 		public NeuronTransformsInstance( NeuronActor actor )
 			:base( actor )
 		{
+			Debug.Log("003");
 		}
+		/*
+		void Start() 
+		{
+			director = GameObject.Find("Director");
+			//director.GetComponent<Director>().Success();
+			if (director)
+			{
+				Debug.Log(director.name);
+				
+			}
+			else
+			{
+				Debug.Log("No game object called Director found");
+			}
+		}
+		*/
 
-        bool inited = false;
+		bool inited = false;
 		new void OnEnable()
 		{
-            if(inited)
+			if (inited)
             {
                 return;
             }
@@ -109,7 +132,6 @@ namespace Neuron
 				{
 					ReleasePhysicalContext();
 				}
-				
 				ApplyMotion( boundActor, transforms, bonePositionOffsets, boneRotationOffsets , enableHipMove, orignalRot, orignalParentRot);
 			}
 
@@ -142,7 +164,7 @@ namespace Neuron
 		}
 		
 		// set position for bone
-		static void SetPosition( Transform[] transforms, NeuronBones bone, Vector3 pos )
+		 void SetPosition( Transform[] transforms, NeuronBones bone, Vector3 pos )
 		{
 			Transform t = transforms[(int)bone];
 			if( t != null )
@@ -153,9 +175,15 @@ namespace Neuron
 				if( !float.IsNaN( pos.x ) && !float.IsNaN( pos.y ) && !float.IsNaN( pos.z ) )
 				{
 					t.localPosition = pos;
+					//director.GetComponent<Director>().JustPosition(pos, (int)bone);
 				}
 			}
 		}
+
+		public void ReturnAccess()
+        {
+			Debug.Log("アクセス成功！");
+        }
 		
 		// set rotation for bone
 		static void SetRotation( Transform[] transforms, NeuronBones bone, Vector3 rotation )
@@ -172,7 +200,7 @@ namespace Neuron
 		}
 
 		// apply transforms extracted from actor mocap data to bones
-		public static void ApplyMotion( NeuronActor actor, Transform[] transforms, Vector3[] bonePositionOffsets, Vector3[] boneRotationOffsets , bool enableHipMove,  Quaternion[] orignalRot = null, Quaternion[] orignalParentRot = null)
+		public void ApplyMotion( NeuronActor actor, Transform[] transforms, Vector3[] bonePositionOffsets, Vector3[] boneRotationOffsets , bool enableHipMove,  Quaternion[] orignalRot = null, Quaternion[] orignalParentRot = null)
 		{
             // apply Hips position
             if (enableHipMove)
@@ -185,10 +213,10 @@ namespace Neuron
 
             SetRotation(transforms, NeuronBones.Hips,
                 (Quaternion.Euler(actor.GetReceivedRotation(NeuronBones.Hips)) * orignalRot[(int)NeuronBones.Hips]).eulerAngles);
-
-
-            // apply positions
-            if (actor.withDisplacement )
+			//director.GetComponent<Director>().JustRotaion(actor.GetReceivedRotation(NeuronBones.Hips), 0);
+			//director.GetComponent<Director>().JustPosition(actor.GetReceivedPosition(NeuronBones.Hips), 0);
+			// apply positions
+			if (actor.withDisplacement )
 			{
 				for( int i = 1; i < (int)NeuronBones.NumOfBones && i < transforms.Length; ++i )
 				{
@@ -202,7 +230,15 @@ namespace Neuron
                         orignalBoneRot = orignalRot[i];
                     }
                     Vector3 rot = actor.GetReceivedRotation((NeuronBones)i) + boneRotationOffsets[i] ;
-                    Quaternion srcQ = Quaternion.Euler(rot);
+
+					/*original add
+					if (i == 0 || i == 7 | i == 8 | i == 9 | i == 14 | i == 15 | i == 37 | i == 38)
+					{
+						director.GetComponent<Director>().JustRotaion(rot, i);
+					}
+					*/
+
+					Quaternion srcQ = Quaternion.Euler(rot);
 
                     Quaternion usedQ = Quaternion.Inverse(orignalParentRot[i]) * srcQ * orignalParentRot[i];
                     Vector3 transedRot = usedQ.eulerAngles;
@@ -211,7 +247,11 @@ namespace Neuron
 
                     // p
                     Vector3 srcP = actor.GetReceivedPosition((NeuronBones)i) + bonePositionOffsets[i];
-                    Vector3 finalP = Quaternion.Inverse(orignalParentRot[i]) * srcP;
+					if (i == 0 || i == 7 | i == 8 | i == 9 | i == 14 | i == 15 | i == 37 | i == 38)
+					{
+						//director.GetComponent<Director>().JustPosition(actor.GetReceivedPosition((NeuronBones)i), i);
+					}
+					Vector3 finalP = Quaternion.Inverse(orignalParentRot[i]) * srcP;
                     SetPosition(transforms, (NeuronBones)i, finalP);
                     //  SetPosition( transforms, (NeuronBones)i, actor.GetReceivedPosition( (NeuronBones)i ) + bonePositionOffsets[i] );
                     //	SetRotation( transforms, (NeuronBones)i, actor.GetReceivedRotation( (NeuronBones)i ) + boneRotationOffsets[i] );
@@ -230,7 +270,11 @@ namespace Neuron
                         orignalBoneRot = orignalRot[i];
                     }
                     Vector3 rot = actor.GetReceivedRotation((NeuronBones)i);
-
+					if (i == 0 || i == 7 | i == 8 | i == 9 | i == 14 | i == 15 | i == 37 | i == 38)
+					{
+						//director.GetComponent<Director>().JustRotaion(rot, i);
+					}
+					//director.GetComponent<Director>().Success(rot,i);
 					//Debug.Log(rot.x+","+rot.y+"," + rot.z);
 					Quaternion srcQ = Quaternion.Euler(rot);
 

@@ -26,7 +26,6 @@ namespace Neuron
 	public static class BoneLines
 	{		
 		#if UNITY_EDITOR
-	
 		static Material GetBoneLineMaterial( Color color, int render_queue_plus )
 		{
 			// create material
@@ -166,7 +165,10 @@ namespace Neuron
 		
 		// remove bone line by animator
 		//static NSH.OnRemoveBoneComponent<BoneLine>	delegate_remove_bone_line = new NSH.OnRemoveBoneComponent<BoneLine>( RemoveBoneLine );
-		
+		static void hoge(){
+			Debug.Log("UnityEditor");
+		}
+
 		static void RemoveBoneLine( HumanBodyBones bone, BoneLine bone_line, params object[] args )
 		{
 			bone_line.RemoveRenderer();

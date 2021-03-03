@@ -7,7 +7,7 @@ using UnityEngine.UI;
 using System.Text;
 //using System.Windows.Forms;
 
-public class WorldLocal : MonoBehaviour
+public class StopJudge : MonoBehaviour
 {
     int head = 0;
     int last;
@@ -168,17 +168,17 @@ public class WorldLocal : MonoBehaviour
                 }
                 ave += maxstop;
                 
-                if (maxstop > 18)
+                if (maxstop > 13)
                 {
                     Texts[j].text = string.Format("{0}:◎", BoneNames[j]);
                     Texts[j].color = new Color(0.88f, 0.66f, 0.0f, 1.0f);
                 }
-                else if (maxstop > 13)
+                else if (maxstop > 10)
                 {
                     Texts[j].text = string.Format("{0}:●", BoneNames[j]);
                     Texts[j].color = new Color(0.0f, 0.0f, 1.0f, 1.0f);
                 }
-                else if (maxstop > 8)
+                else if (maxstop > 7)
                 {
                     Texts[j].text = string.Format("{0}:▲", BoneNames[j]);
                     Texts[j].color = new Color(1.0f, 1.0f, 1.0f, 0.5f);
@@ -193,17 +193,17 @@ public class WorldLocal : MonoBehaviour
             }
             ave = ave / (float)Bones.Length;
             
-            if (ave > 18)
+            if (ave > 13)
             {
                 Judge.text = string.Format("Perfect!!{0}",count);
                 Judge.color = new Color(0.88f, 0.66f, 0.0f, 1.0f);
             }
-            else if(ave > 13)
+            else if(ave > 10)
             {
                 Judge.text = string.Format("Greatt!!{0}", count);
                 Judge.color = new Color(0.0f, 0.0f, 1.0f, 1.0f);
             }
-            else if (ave > 8)
+            else if (ave > 7)
             {
                 Judge.text = string.Format("Nice!!{0}", count);
                 Judge.color = new Color(1.0f, 1.0f, 1.0f, 0.5f);

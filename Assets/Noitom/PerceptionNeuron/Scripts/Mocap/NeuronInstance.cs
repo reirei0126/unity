@@ -54,17 +54,21 @@ namespace Neuron
 
         public NeuronInstance()
 		{
+			Debug.Log("0a");
 		}
 
 		public NeuronInstance( string address, int port, int commandServerPort, NeuronConnection.SocketType socketType, int actorID )
 		{
 			standalone = true;
+			Debug.Log("0b");
 		}
 
 		public NeuronInstance( NeuronActor boundActor )
 		{
-			if( boundActor != null )
+			Debug.Log("0c");
+			if ( boundActor != null )
 			{
+				Debug.Log("boundActor");
 				this.boundActor = boundActor;
 				RegisterCallbacks();
 				standalone = false;

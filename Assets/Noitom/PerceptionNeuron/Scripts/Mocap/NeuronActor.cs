@@ -37,7 +37,7 @@ namespace Neuron
 		public delegate bool 							NoFrameDataDelegate();
 		public delegate bool							ResumeFrameDataDelegate();
 		
-		static float									NeuronUnityLinearScale = 0.01f;
+		static float									NeuronUnityLinearScale = 1f;//0.01f;
 	
 		BvhDataHeader									header;
 		float[]											data = new float[MaxFrameDataLength];
@@ -171,6 +171,7 @@ namespace Neuron
 				// Hips position + Hips rotation + 58 * ( position + rotation )
 				offset += (int)bone * 6;
 				return new Vector3( -data[offset] * NeuronUnityLinearScale, data[offset+1] * NeuronUnityLinearScale, data[offset+2] * NeuronUnityLinearScale );
+				//return new Vector3(-data[offset] , data[offset + 1] , data[offset + 2] );
 			}
 			
 			return Vector3.zero;
@@ -197,6 +198,18 @@ namespace Neuron
 			}
 			
 			return new Vector3( data[offset+1], -data[offset], -data[offset+2] );
+		}
+
+		//付け加え
+		public Vector3 GetRealHipsPosition()
+		{
+			int offset = 0;
+			if (header.bWithReference != 0)
+			{
+				// skip reference
+				offset += 6;
+			}
+			return new Vector3(-data[offset], data[offset + 1], data[offset + 2]);
 		}
 	}
 }
